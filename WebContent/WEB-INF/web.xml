@@ -6,8 +6,8 @@
 	<display-name>SSM-REST-DEMO</display-name>
 
 	<context-param>
-	    <param-name>log4jConfigLocation</param-name>
-	    <param-value>classpath:/config/log4j.properties</param-value>
+	    <param-name>log4j.configurationFile</param-name>
+	    <param-value>classpath:/config/log4j2.xml</param-value>
   	</context-param>
 	<!-- 添加UTF-8编码支持 -->
 	<filter>
@@ -58,6 +58,14 @@
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 	
+	<filter>
+		<filter-name>WebContextFilter</filter-name>
+		<filter-class>com.ssm.rest.demo.common.WebContextFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>WebContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	<!-- CORS跨域访问过滤器初始化 -->
 	<filter>
 		<filter-name>corsFilter</filter-name>

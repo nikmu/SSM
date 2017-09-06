@@ -1,10 +1,14 @@
 package com.ssm.rest.demo.entity;
 
+import javax.validation.constraints.NotEmpty;
+
 public class User {
     private Integer id;
 
+    @NotEmpty
     private String userName;
-
+    
+    @NotEmpty
     private String password;
 
     private Integer age;

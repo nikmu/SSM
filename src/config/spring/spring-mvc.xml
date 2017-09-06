@@ -33,8 +33,6 @@
 			</bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
-	
-	<bean id="tokenManager" class="com.ssm.rest.demo.security.impl.DefaultTokenManager"/>
 	<bean id="securityAspect" class="com.ssm.rest.demo.security.SecurityAspect">
 		<property name="tokenManager" ref="tokenManager"></property>
 		<property name="tokenName" value="X-Token"></property>
