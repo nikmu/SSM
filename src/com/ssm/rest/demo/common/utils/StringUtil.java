@@ -1,6 +1,7 @@
 package com.ssm.rest.demo.common.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  *   
@@ -47,6 +48,13 @@ public class StringUtil {
 		return isHanYu;
 	}
 
+	/**
+     * 判断字符串是否为数字
+     */
+    public static boolean isNumeric(String str) {
+        return NumberUtils.isDigits(str);
+    }
+    
 	/**
 	 * 判断用户名是否合法
 	 * 

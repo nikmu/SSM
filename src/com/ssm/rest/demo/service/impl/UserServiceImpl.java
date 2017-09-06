@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.ssm.rest.demo.dao.IUserDao;
 import com.ssm.rest.demo.entity.User;
-import com.ssm.rest.demo.model.UserModel;
 import com.ssm.rest.demo.service.IUserService;
 
 @Service

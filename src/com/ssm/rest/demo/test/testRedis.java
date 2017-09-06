@@ -21,7 +21,8 @@ public class testRedis {
 		URL url;
 		try {
 			url = new URL("http://www.baidu.com");
-			redisExample.addLink("123", url);
+			redisExample.addLink("baidu", url);
+			System.out.println(redisExample.getLink("baidu"));
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.ssm.rest.demo.test;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.annotation.Resource;
@@ -20,5 +21,9 @@ public class RedisExample {
 	
 	public void addLink(String userId, URL url) {
 		listOps.leftPush(userId, url.toExternalForm());
+	}
+	
+	public URL getLink(String userId) throws MalformedURLException {
+		return new URL(listOps.leftPop(userId));
 	}
 }
