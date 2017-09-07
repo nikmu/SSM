@@ -1,9 +1,18 @@
 package com.ssm.rest.demo.entity;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotEmpty;
 
-public class User {
-    private Integer id;
+public class User implements Serializable{
+	
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 12L;
+
+	private Integer id;
 
     @NotEmpty
     private String userName;
