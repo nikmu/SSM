@@ -17,7 +17,12 @@
 	<context:component-scan base-package="com.ssm.rest.demo.*"></context:component-scan>
 	
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:config/jdbc.properties"></property>
+		<property name="locations">
+          <list>
+              <value>classpath:config/jdbc.properties</value>
+              <value>classpath:config/redis.properties</value>
+          </list>
+      	</property>
 	</bean>
 	
 	<!-- mysql数据源配置 -->
@@ -37,6 +42,7 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
 		<property name="mapperLocations" value="classpath:config/mapper/*.xml"></property>
+		<property name="configLocation" value="classpath:config/mybatis/mybatis.xml" />
 	</bean>
 	
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
@@ -44,6 +50,7 @@
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
 	
+	<!-- jedis config -->
 	<bean id="redisPool" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxIdle" value="${redis.maxIdle}"/>
 		<property name="maxTotal" value="${redis.maxActive}"/>
@@ -52,15 +59,31 @@
 		<property name="testOnReturn" value="${redis.testOnReturn}"/>
 	</bean>
 	
+	<!-- <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton">
+		<constructor-arg index="0" ref="redisPool"/>
+		<constructor-arg index="1">
+			<list>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg name="host" value="${redis.host}"/>
+					<constructor-arg name="port" value="${redis.port}"/>
+					<constructor-arg name="timeout" value="${redis.timeout}"/>
+					<constructor-arg name="weight" value="1"/>
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean> -->
+	
+	<!-- spring data redis  start-->
 	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
 	p:host-name="${redis.host}" p:port="${redis.port}"  p:pool-config-ref="redisPool"/>
 	
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
 	p:connection-factory-ref="jedisConnectionFactory"/>
+	<!-- spring data redis  end-->
 	
 	<bean id="transacionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
-	<bean id="tokenManager" class="com.ssm.rest.demo.security.impl.DefaultTokenManager"/>
+	<bean id="tokenManager" class="com.ssm.rest.demo.security.impl.RedisTokenManager"/>
 </beans>

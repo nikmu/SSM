@@ -47,14 +47,15 @@ public class SecurityAspect {
             return pjp.proceed();
         }
         // 从 request cookie 中获取当前 token
-        String token = null;
-        Cookie[] cookies = WebContext.getRequest().getCookies();
-        for (Cookie cookie : cookies) {
-			if(cookie.getName().equals(tokenName)) {
-				token = cookie.getValue();
-				break;
-			}	
-		}
+//        String token = null;
+        String token = WebContext.getRequest().getHeader(tokenName);
+//        Cookie[] cookies = WebContext.getRequest().getCookies();
+//        for (Cookie cookie : cookies) {
+//			if(cookie.getName().equals(tokenName)) {
+//				token = cookie.getValue();
+//				break;
+//			}	
+//		}
         // 检查 token 有效性
         if (!tokenManager.checkToken(token)) {
             String message = String.format("token [%s] is invalid", token);

@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class RedisExample {
 
-//	@Autowired
-//	private RedisTemplate<String, String> template;
+	@Autowired
+	private RedisTemplate<String, String> template;
 	
 	@Resource(name="redisTemplate")
 	private ListOperations<String, String> listOps;
+	
+//	private ValueOperations<K, V>
 	
 	public void addLink(String userId, URL url) {
 		listOps.leftPush(userId, url.toExternalForm());
@@ -25,5 +27,22 @@ public class RedisExample {
 	
 	public URL getLink(String userId) throws MalformedURLException {
 		return new URL(listOps.leftPop(userId));
+	}
+	
+	public void set(String key, String value) {
+		template.boundSetOps(key).add(value);
+//		SessionCallback<Object> sessionCallback = new SessionCallback<Object>() {
+//
+//			@Override
+//			public <K, V> Object execute(RedisOperations<K, V> arg0) throws DataAccessException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//			
+//		};
+	}
+	
+	public String get(String key) {
+		return template.boundSetOps(key).pop();
 	}
 }
