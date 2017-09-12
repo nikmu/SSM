@@ -3,27 +3,19 @@ package com.ssm.rest.demo.common.redis;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.annotation.Resource;
-
 import org.apache.ibatis.cache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnection;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.stereotype.Component;
-
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 public class RedisCache implements Cache{
 
 	private static final Logger logger = LoggerFactory.getLogger(RedisCache.class);
 	
-//	@Autowired(required = false)
 	private static JedisConnectionFactory jedisconnectionFactory;
 	
 	private final String id;
@@ -65,8 +57,6 @@ public class RedisCache implements Cache{
 		Object result = null;
 		JedisConnection connection = null;
 		try {
-//			RedisConnectionFactory r = redisTemplate.getConnectionFactory();
-			
 			connection = (JedisConnection) jedisconnectionFactory.getConnection();
 			RedisSerializer<Object> serializer = new JdkSerializationRedisSerializer();
 			result = serializer.deserialize(connection.get(serializer.serialize(key)));

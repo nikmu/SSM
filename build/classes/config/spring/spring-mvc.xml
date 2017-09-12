@@ -38,6 +38,9 @@
 		<property name="tokenName" value="X-Token"></property>
 	</bean>
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
 	<!-- <aop:config>
 		<aop:aspect ref="securityAspect">
 			<aop:pointcut expression="@annotation(org.springframework.web.bind.annotation.RequestMapping)" id="controllerPointCut"/>

@@ -1,71 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssm.rest.demo.dao.IUserRolesDao">
-  <resultMap id="BaseResultMap" type="com.ssm.rest.demo.entity.UserRoles">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+  <resultMap id="BaseResultMap" type="com.ssm.rest.demo.entity.UserRolesKey">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
   </resultMap>
-  <sql id="Base_Column_List">
-    id, username, role_name
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from user_roles
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from user_roles
-    where id = #{id,jdbcType=INTEGER}
+  <resultMap id="userId" type="com.ssm.rest.demo.entity.UserRolesKey">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.ssm.rest.demo.entity.UserRolesKey">
+    delete from sys_user_roles
+    where user_id = #{userId,jdbcType=BIGINT}
+      and role_id = #{roleId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.ssm.rest.demo.entity.UserRoles">
-    insert into user_roles (id, username, role_name
-      )
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}
-      )
+  <insert id="insert" parameterType="com.ssm.rest.demo.entity.UserRolesKey">
+    insert into sys_user_roles (user_id, role_id)
+    values (#{userId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.ssm.rest.demo.entity.UserRoles">
-    insert into user_roles
+  <insert id="insertSelective" parameterType="com.ssm.rest.demo.entity.UserRolesKey">
+    insert into sys_user_roles
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
+      <if test="userId != null">
+        user_id,
       </if>
-      <if test="username != null">
-        username,
-      </if>
-      <if test="roleName != null">
-        role_name,
+      <if test="roleId != null">
+        role_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
       </if>
-      <if test="username != null">
-        #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="roleName != null">
-        #{roleName,jdbcType=VARCHAR},
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ssm.rest.demo.entity.UserRoles">
-    update user_roles
-    <set>
-      <if test="username != null">
-        username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="roleName != null">
-        role_name = #{roleName,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.ssm.rest.demo.entity.UserRoles">
-    update user_roles
-    set username = #{username,jdbcType=VARCHAR},
-      role_name = #{roleName,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+  <select id="findByUserId" resultType="java.lang.Long">
+    select 
+    role_id
+    from sys_user_roles
+    where user_id = #{userId, jdbcType=BIGINT}
+  </select>
+  <select id="findByRoleId" resultType="java.lang.Long">
+    select 
+    user_id
+    from sys_user_roles
+    where role_id = #{roleId, jdbcType=BIGINT}
+  </select>
 </mapper>

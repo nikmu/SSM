@@ -1,17 +1,17 @@
 package com.ssm.rest.demo.dao;
 
-import com.ssm.rest.demo.entity.UserRoles;
+
+import com.ssm.rest.demo.entity.UserRolesKey;
 
 public interface IUserRolesDao {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(UserRolesKey key);
 
-    int insert(UserRoles record);
+    int insert(UserRolesKey record);
 
-    int insertSelective(UserRoles record);
-
-    UserRoles selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(UserRoles record);
-
-    int updateByPrimaryKey(UserRoles record);
+    int insertSelective(UserRolesKey record);
+    
+    Long[] findByUserId(Long userId);
+    
+    Long[] findByRoleId(Long roleId);
+    
 }

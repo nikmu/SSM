@@ -1,21 +1,32 @@
 package com.ssm.rest.demo.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.ssm.rest.demo.entity.User;
-import com.ssm.rest.demo.model.ConditionQueryModel;
 
 public interface IUserService {
 
-	public List<User> findUser(ConditionQueryModel cqModel);
-	
-	public User getUserById(Integer id);
-	
-	public User getUserByName(String userName);
-	
 	public User addUser(User user);
 	
-	public boolean updateUser(User user);
+	public User updateUser(User user);
 	
-	public boolean deleteUserBy(User Name);
+	public boolean deleteUser(Long userId);
+	
+	public void changePassword(Long userId, String newPassword);
+	
+	public User findById(Long id);
+	
+	public List<User> findAll();
+	
+	public User findByUsername(String username);
+	
+	public Set<String> findRoles(String username);
+	
+	public Set<String> findPermissions(String username);
+	
+	public void correlationRoles(Long userId, Long...roleIds);
+	
+	public void uncorrelationRoles(Long userId, Long...roleIds);
+	
 }

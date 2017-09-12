@@ -4,6 +4,7 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -11,11 +12,16 @@
 	http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/mvc
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd
 	http://www.springframework.org/schema/aop
 	http://www.springframework.org/schema/aop/spring-aop.xsd">
 	
 	<context:component-scan base-package="com.ssm.rest.demo.*"></context:component-scan>
-	
+	<!-- <context:property-placeholder location="classpath:config/shiro.properties"/> -->
+	<!-- 开启AOP监听 只对当前配置文件有效 -->
+    <aop:aspectj-autoproxy expose-proxy="true"/>
+    
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
           <list>
@@ -34,7 +40,6 @@
 		<property name="password" value="${jdbc.password}"/>
 		<property name="initialSize" value="${jdbc.initialSize}"/>
 		<property name="maxActive" value="${jdbc.maxActive}"/>
-		<property name="maxIdle" value="${jdbc.maxIdle}"/>
 		<property name="minIdle" value="${jdbc.minIdle}"/>
 		<property name="maxWait" value="${jdbc.maxWait}"/>
 	</bean>
@@ -50,40 +55,25 @@
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
 	
-	<!-- jedis config -->
-	<bean id="redisPool" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxIdle" value="${redis.maxIdle}"/>
-		<property name="maxTotal" value="${redis.maxActive}"/>
-		<property name="maxWaitMillis" value="${redis.maxWait}"/>
-		<property name="testOnBorrow" value="${redis.testOnBorrow}"/>
-		<property name="testOnReturn" value="${redis.testOnReturn}"/>
-	</bean>
-	
-	<!-- <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton">
-		<constructor-arg index="0" ref="redisPool"/>
-		<constructor-arg index="1">
-			<list>
-				<bean class="redis.clients.jedis.JedisShardInfo">
-					<constructor-arg name="host" value="${redis.host}"/>
-					<constructor-arg name="port" value="${redis.port}"/>
-					<constructor-arg name="timeout" value="${redis.timeout}"/>
-					<constructor-arg name="weight" value="1"/>
-				</bean>
-			</list>
-		</constructor-arg>
-	</bean> -->
-	
-	<!-- spring data redis  start-->
-	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
-	p:host-name="${redis.host}" p:port="${redis.port}"  p:pool-config-ref="redisPool"/>
-	
-	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
-	p:connection-factory-ref="jedisConnectionFactory"/>
-	<!-- spring data redis  end-->
-	
-	<bean id="transacionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config expose-proxy="true" proxy-target-class="true">
+        <!-- 只对业务逻辑层实施事务 -->
+        <aop:pointcut id="txPointcut" expression="execution(* com.ssm.rest.demo..service..*+.*(..))"/>
+        <aop:advisor id="txAdvisor" advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+    </aop:config>
+    
 	<bean id="tokenManager" class="com.ssm.rest.demo.security.impl.RedisTokenManager"/>
+	
+	<import resource="classpath:config/spring/spring-redis.xml"/>
+	<import resource="classpath:config/spring/spring-cache.xml"/>
+	<import resource="classpath:config/spring/spring-shiro.xml"/>
 </beans>

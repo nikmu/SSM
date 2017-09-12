@@ -1,53 +1,104 @@
 package com.ssm.rest.demo.service.impl;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssm.rest.demo.common.utils.PasswordHelper;
 import com.ssm.rest.demo.dao.IUserDao;
+import com.ssm.rest.demo.dao.IUserRolesDao;
 import com.ssm.rest.demo.entity.User;
-import com.ssm.rest.demo.model.ConditionQueryModel;
-import com.ssm.rest.demo.model.PageModel;
+import com.ssm.rest.demo.service.IRoleService;
 import com.ssm.rest.demo.service.IUserService;
 
 @Service
 public class UserServiceImpl implements IUserService {
 
 	@Autowired
-	private IUserDao userdao;
+	private IUserDao userDao;
+	@Autowired
+	private IUserRolesDao userRoleDao;
+	@Autowired
+	private PasswordHelper passwordHelper;
+	@Autowired
+	private IRoleService roleService;
+	
 	
 	@Override
-	public User getUserById(Integer id) {
-		return userdao.selectByPrimaryKey(id);
-	}
-
-	@Override
-	public User getUserByName(String userName) {
-		return userdao.selectByUserName(userName);
-	}
-
-	@Override
 	public User addUser(User user) {
-		System.out.println(userdao.insert(user));
-		return null;
+		passwordHelper.encryptPassword(user);
+		userDao.insert(user);
+		return user;
 	}
 
 	@Override
-	public boolean updateUser(User user) {
+	public User updateUser(User user) {
+		userDao.updateByPrimaryKey(user);
+		return user;
+	}
+
+	@Override
+	public boolean deleteUser(Long userId) {
+		userDao.deleteByPrimaryKey(userId);
+		return true;
+	}
+
+	@Override
+	public void changePassword(Long userId, String newPassword) {
+		User user =userDao.selectByPrimaryKey(userId);
+        user.setPassword(newPassword);
+        passwordHelper.encryptPassword(user);
+        userDao.updateByPrimaryKey(user);
+	}
+
+	@Override
+	public User findById(Long id) {
+		return userDao.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public List<User> findAll() {
+		return userDao.findAll();
+	}
+
+	@Override
+	public User findByUsername(String username) {
+		return userDao.findByUsername(username);
+	}
+
+	@Override
+	public Set<String> findRoles(String username) {
+		User user = findByUsername(username);
+        if(user == null) {
+            return Collections.emptySet();
+        }
+        Long[] roleIds = userRoleDao.findByUserId(user.getId());
+        return roleService.findRoles(roleIds);
+	}
+
+	@Override
+	public Set<String> findPermissions(String username) {
+		User user = findByUsername(username);
+	    if(user == null) {
+	        return Collections.emptySet();
+	    }
+	    Long[] roleIds = userRoleDao.findByUserId(user.getId());
+	    return roleService.findPermissions(roleIds);
+	}
+
+	@Override
+	public void correlationRoles(Long userId, Long... roleIds) {
 		// TODO Auto-generated method stub
-		return false;
+		
 	}
 
 	@Override
-	public boolean deleteUserBy(User Name) {
+	public void uncorrelationRoles(Long userId, Long... roleIds) {
 		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public List<User> findUser(ConditionQueryModel cqModel) {
-		return userdao.findUser(cqModel);
+		
 	}
 
 }

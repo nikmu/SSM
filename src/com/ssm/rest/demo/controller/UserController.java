@@ -35,8 +35,8 @@ public class UserController {
 	}
 		
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-	public Response searchUserById(@PathVariable Integer id) {
-		User user = userService.getUserById(id);
+	public Response searchUserById(@PathVariable Long id) {
+		User user = userService.findById(id);
 		Response response = new Response();
 		response.success(user);
 		return response;

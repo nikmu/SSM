@@ -25,7 +25,7 @@ public class MyBatisRadisCache {
 	
 	@Test
 	public void testCache() {
-		ConditionQueryModel cqModel = new ConditionQueryModel();
+		/*ConditionQueryModel cqModel = new ConditionQueryModel();
 		List<User> list = new ArrayList<>();
 		cqModel.setOffset(0);
 		cqModel.setLimit(10);
@@ -46,6 +46,6 @@ public class MyBatisRadisCache {
 		list = userService.findUser(cqModel);
 		for (User user : list) {
 			logger.info(user.toString());
-		}
+		}*/
 	}
 }

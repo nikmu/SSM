@@ -5,10 +5,19 @@
 	version="3.1">
 	<display-name>SSM-REST-DEMO</display-name>
 
+	<!-- log4j2 support change path -->
+	<listener>
+		<listener-class>com.ssm.rest.demo.common.Log4j2ConfigListener</listener-class>
+	</listener>
 	<context-param>
-	    <param-name>log4j.configurationFile</param-name>
-	    <param-value>classpath:/config/log4j2.xml</param-value>
-  	</context-param>
+		<param-name>log4j.configurationFile</param-name>
+		<param-value>classpath:/config/log4j2.xml</param-value>
+	</context-param>
+	<!-- 添加对spring mybatis的支持 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:/config/spring/spring-mybatis.xml</param-value>
+	</context-param>
 	<!-- 添加UTF-8编码支持 -->
 	<filter>
 		<filter-name>CharacterEncodingFilter</filter-name>
@@ -22,14 +31,24 @@
 		<filter-name>CharacterEncodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	<!-- shiro filter -->
+	<filter>
+        <filter-name>shiroFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
 
-	<!-- 添加对spring  mybatis的支持 -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:/config/spring/spring-mybatis.xml</param-value>
-	</context-param>
-	
-	<!-- 配置spring监听器-->
+    <filter-mapping>
+        <filter-name>shiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+	<!-- 配置spring监听器 -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
@@ -41,7 +60,7 @@
 	<listener>
 		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
 	</listener>
-	
+
 	<!-- 添加springMVC前端控制器 -->
 	<servlet>
 		<servlet-name>springMVC</servlet-name>
@@ -57,7 +76,7 @@
 		<servlet-name>springMVC</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<filter>
 		<filter-name>WebContextFilter</filter-name>
 		<filter-class>com.ssm.rest.demo.common.WebContextFilter</filter-class>
@@ -92,7 +111,7 @@
 		<filter-name>corsFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>

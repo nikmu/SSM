@@ -50,4 +50,7 @@
         <setting name="aggressiveLazyLoading" value="true"/>
 
     </settings>
+	<typeHandlers>
+		<typeHandler handler="com.ssm.rest.demo.common.mybatis.LongArrayTypeHandler"/>
+	</typeHandlers>
 </configuration>

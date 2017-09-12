@@ -7,6 +7,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -114,6 +116,23 @@ public class ExceptionActive {
 		return new Response().failure(e.getMessage());
 	}
 	
+	@ExceptionHandler({UnauthorizedException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response handleUnauthenticatedException(UnauthorizedException e) {
+//        ModelAndView mv = new ModelAndView();
+//        mv.addObject("exception", e);
+//        mv.setViewName("unauthorized");
+        return new Response().failure(e.getMessage());
+    }
+	
+	@ExceptionHandler({UnknownAccountException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response handleUnknownAccountException(UnknownAccountException e) {
+//        ModelAndView mv = new ModelAndView();
+//        mv.addObject("exception", e);
+//        mv.setViewName("unauthorized");
+        return new Response().failure(e.getMessage());
+    }
 	/**
 	 * 405 - Method Not Allowed
 	 */
