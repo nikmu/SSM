@@ -7,16 +7,16 @@ import javax.validation.Valid;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.ssm.rest.demo.common.Response;
 import com.ssm.rest.demo.common.WebContext;
 import com.ssm.rest.demo.entity.User;
-import com.ssm.rest.demo.model.TokenModel;
 import com.ssm.rest.demo.security.IgnoreSecurity;
 import com.ssm.rest.demo.security.TokenManager;
 import com.ssm.rest.demo.service.IUserService;
@@ -53,6 +53,24 @@ public class LoginController {
 //		return new Response().success(model);
 		return null;
 	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	@IgnoreSecurity
+	public ModelAndView showLoginForm(HttpServletRequest req, Model model) {
+        String exceptionClassName = (String)req.getAttribute("shiroLoginFailure");
+        String error = null;
+        if(UnknownAccountException.class.getName().equals(exceptionClassName)) {
+            error = "用户名/密码错误";
+        } else if(IncorrectCredentialsException.class.getName().equals(exceptionClassName)) {
+            error = "用户名/密码错误";
+        } else if(exceptionClassName != null) {
+            error = "其他错误：" + exceptionClassName;
+        }
+        model.addAttribute("error", error);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("login");
+        return modelAndView;
+    }
 	
 	@RequestMapping(method = RequestMethod.DELETE)
 	public Response logout() {

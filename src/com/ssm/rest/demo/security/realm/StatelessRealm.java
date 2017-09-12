@@ -38,7 +38,7 @@ public class StatelessRealm extends AuthorizingRealm {
         String username = statelessToken.getUsername();
         String key = getKey(username);//根据用户名获取密钥（和客户端的一样）
         //在服务器端生成客户端参数消息摘要
-        String serverDigest = CodecUtil.encodeSHA256(key, statelessToken.getParams());
+        String serverDigest = CodecUtil.encodeSHA256(key, statelessToken.getPassword());
         System.out.println(statelessToken.getClientDigest());
         System.out.println(serverDigest);
         //然后进行客户端消息摘要和服务器端消息摘要的匹配

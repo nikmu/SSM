@@ -86,12 +86,12 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<!-- CORS跨域访问过滤器初始化 -->
-	<filter>
+	<!-- <filter>
 		<filter-name>corsFilter</filter-name>
 		<filter-class>com.ssm.rest.demo.common.CorsFilter</filter-class>
 		<init-param>
 			<param-name>allowOrigin</param-name>
-			<!-- 允许访问的域名 -->
+			允许访问的域名
 			<param-value>http://web.xxx.com</param-value>
 		</init-param>
 		<init-param>
@@ -110,14 +110,14 @@
 	<filter-mapping>
 		<filter-name>corsFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
 
-	<welcome-file-list>
+	<!-- <welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>default.html</welcome-file>
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
+	</welcome-file-list> -->
 </web-app>

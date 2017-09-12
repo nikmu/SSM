@@ -11,40 +11,42 @@ public class StatelessToken implements AuthenticationToken {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String username;
-    private Map<String, ?> params;
+    private String password;
     private String clientDigest;
 
-    public StatelessToken(String username,  Map<String, ?> params, String clientDigest) {
-        this.username = username;
-        this.params = params;
-        this.clientDigest = clientDigest;
-    }
 
-    public String getUsername() {
-        return username;
-    }
+    public StatelessToken(String username, String password, String clientDigest) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.clientDigest = clientDigest;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public  Map<String, ?> getParams() {
-        return params;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public void setParams( Map<String, ?> params) {
-        this.params = params;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public String getClientDigest() {
-        return clientDigest;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setClientDigest(String clientDigest) {
-        this.clientDigest = clientDigest;
-    }
+	public String getClientDigest() {
+		return clientDigest;
+	}
 
-    @Override
+	public void setClientDigest(String clientDigest) {
+		this.clientDigest = clientDigest;
+	}
+
+	@Override
     public Object getPrincipal() {
        return username;
     }

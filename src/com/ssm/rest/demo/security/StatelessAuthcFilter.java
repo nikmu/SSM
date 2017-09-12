@@ -27,11 +27,12 @@ public class StatelessAuthcFilter extends AccessControlFilter {
         //2、客户端传入的用户身份
         String username = request.getParameter(ShiroConst.PARAM_USERNAME);
         //3、客户端请求的参数列表
-        Map<String, String[]> params = new HashMap<String, String[]>(request.getParameterMap());
-        params.remove(ShiroConst.PARAM_DIGEST);
+//        Map<String, String[]> params = new HashMap<String, String[]>(request.getParameterMap());
+//        params.remove(ShiroConst.PARAM_DIGEST);
+        String password = request.getParameter(ShiroConst.PARAM_PASSWORD);
 
         //4、生成无状态Token
-        StatelessToken token = new StatelessToken(username, params, clientDigest);
+        StatelessToken token = new StatelessToken(username, password, clientDigest);
 
         try {
             //5、委托给Realm进行登录
