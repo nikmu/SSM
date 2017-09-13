@@ -13,10 +13,10 @@ public class DefaultTokenManager implements TokenManager {
 	private static Map<String, String> tokenMap =  new ConcurrentHashMap<>();
 	
 	@Override
-	public TokenModel createToken(String userName) {
+	public TokenModel createToken(String username) {
 		String token = CodecUtil.createUUID();
-		tokenMap.put(token, userName);
-		return new TokenModel(userName, token);
+		tokenMap.put(token, username);
+		return new TokenModel(username, token);
 	}
 
 	@Override
@@ -40,6 +40,12 @@ public class DefaultTokenManager implements TokenManager {
 	public void deleteToken(String userName) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public String getUser(String token) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

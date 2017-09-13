@@ -9,19 +9,24 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.ssm.rest.demo.common.utils.CodecUtil;
+import com.ssm.rest.demo.model.TokenModel;
+import com.ssm.rest.demo.security.TokenException;
+import com.ssm.rest.demo.security.TokenManager;
 import com.ssm.rest.demo.service.IUserService;
 
 public class StatelessRealm extends AuthorizingRealm {
 	
 	@Autowired
 	private IUserService userService;
+	@Autowired
+	private TokenManager tokenManager;
 	
     @Override
     public boolean supports(AuthenticationToken token) {
         //仅支持StatelessToken类型的Token
-        return token instanceof StatelessToken;
+        return token instanceof TokenModel;
     }
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -34,24 +39,17 @@ public class StatelessRealm extends AuthorizingRealm {
     }
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        StatelessToken statelessToken = (StatelessToken) token;
-        String username = statelessToken.getUsername();
-        String key = getKey(username);//根据用户名获取密钥（和客户端的一样）
-        //在服务器端生成客户端参数消息摘要
-        String serverDigest = CodecUtil.encodeSHA256(key, statelessToken.getPassword());
-        System.out.println(statelessToken.getClientDigest());
-        System.out.println(serverDigest);
+        TokenModel tokenModel = (TokenModel) token;
+        String mytoken = tokenModel.getToken();
+        String username = tokenManager.getUser(mytoken);
+        if (username == null) {
+        	String message = String.format("token [%s] is invalid", mytoken);
+        	throw new TokenException(message);
+		}
         //然后进行客户端消息摘要和服务器端消息摘要的匹配
         return new SimpleAuthenticationInfo(
                 username,
-                serverDigest,
+                mytoken,
                 getName());
-    }
-
-    private String getKey(String username) {//得到密钥，此处硬编码一个
-        if("admin".equals(username)) {
-            return "dadadswdewq2ewdwqdwadsadasd";
-        }
-        return null;
     }
 }

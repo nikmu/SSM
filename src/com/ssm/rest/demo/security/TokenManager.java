@@ -4,9 +4,11 @@ import com.ssm.rest.demo.model.TokenModel;
 
 public interface TokenManager {
 
-	public TokenModel createToken(String userName);
+	public TokenModel createToken(String username);
 	
 	boolean checkToken(TokenModel tokenModel);
+	
+	public String getUser(String token);
 	
 	public TokenModel getToken(String auth);
 	

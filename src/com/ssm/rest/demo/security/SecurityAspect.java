@@ -2,9 +2,12 @@ package com.ssm.rest.demo.security;
 
 import com.ssm.rest.demo.common.WebContext;
 import com.ssm.rest.demo.common.utils.StringUtil;
+import com.ssm.rest.demo.model.TokenModel;
 
 import java.lang.reflect.Method;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -46,12 +49,20 @@ public class SecurityAspect {
         }
         // 从 request header中获取当前 token
         String token = WebContext.getRequest().getHeader(tokenName);
-
-        // 检查 token 有效性
-        if (!tokenManager.checkToken(token)) {
-            String message = String.format("token [%s] is invalid", token);
-            throw new TokenException(message);
+        String username = WebContext.getRequest().getHeader("username");
+        
+        TokenModel tokenModel = new TokenModel(username, token);
+        try {
+        	Subject subject = SecurityUtils.getSubject();
+        	subject.login(tokenModel);
+        } catch (Exception e) {
+            throw e;
         }
+        // 检查 token 有效性
+//        if (!tokenManager.checkToken(token)) {
+//            String message = String.format("token [%s] is invalid", token);
+//            throw new TokenException(message);
+//        }
         // 调用目标方法
         return pjp.proceed();
 	}

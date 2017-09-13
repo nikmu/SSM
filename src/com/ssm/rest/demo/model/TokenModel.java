@@ -1,39 +1,47 @@
 package com.ssm.rest.demo.model;
 
-public class TokenModel {
+import org.apache.shiro.authc.AuthenticationToken;
 
-	private String userName;
+public class TokenModel implements AuthenticationToken{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String username;
 	
 	private String token;
 
-	public TokenModel(String userName, String token) {
+	public TokenModel(String username, String token) {
 		super();
-		this.userName = userName;
+		this.username = username;
 		this.token = token;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-
-	public void setUserName(String userId) {
-		this.userName = userId;
+	public void setUsername(String username) {
+		this.username = username;
 	}
-
 
 	public String getToken() {
 		return token;
 	}
 
-
 	public void setToken(String token) {
 		this.token = token;
 	}
 
+	@Override
+	public Object getCredentials() {
+		return this.token;
+	}
 
 	@Override
-	public String toString() {
-		return "TokenModel [userName=" + userName + ", token=" + token + "]";
+	public Object getPrincipal() {
+		return this.username;
 	}
 }

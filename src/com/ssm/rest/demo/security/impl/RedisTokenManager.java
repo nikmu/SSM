@@ -18,20 +18,20 @@ public class RedisTokenManager implements TokenManager {
 	private RedisTemplate<String, String> redisTemplate;
 	
 	@Override
-	public TokenModel createToken(String userName) {
+	public TokenModel createToken(String username) {
 		String token = CodecUtil.createUUID();
-		TokenModel model = new TokenModel(userName, token);
-		redisTemplate.boundValueOps(token).set(userName, 15, TimeUnit.MINUTES);
-		return model;
+		redisTemplate.boundValueOps(token).set(username, 15, TimeUnit.MINUTES);
+		return new TokenModel(username, token);
 	}
-
+	
 	@Override
 	public boolean checkToken(TokenModel tokenModel) {
 		if (tokenModel == null) {
 			return false;
 		}
-		String userName = redisTemplate.boundValueOps(tokenModel.getToken()).get();
-		if(userName != null && userName.equals(tokenModel.getUserName())) {
+		
+		String username = redisTemplate.boundValueOps(tokenModel.getToken()).get();
+		if(username != null && username.equals(tokenModel.getUsername())) {
 			redisTemplate.boundValueOps(tokenModel.getToken())
 			.expire(15, TimeUnit.MINUTES);
 			return true;
@@ -40,6 +40,17 @@ public class RedisTokenManager implements TokenManager {
 		return false;
 	}
 
+	@Override
+	public String getUser(String token) {
+		String username = redisTemplate.boundValueOps(token).get();
+		if (username != null) {
+			redisTemplate.boundValueOps(token)
+			.expire(15, TimeUnit.MINUTES);
+			return username;
+		}
+		return null;
+	}
+	
 	@Override
 	public TokenModel getToken(String auth) {
 		if (auth == null || auth.length() == 0) {
@@ -69,5 +80,4 @@ public class RedisTokenManager implements TokenManager {
 		}
 		return false;
 	}
-
 }

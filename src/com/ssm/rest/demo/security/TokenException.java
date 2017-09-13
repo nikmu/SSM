@@ -1,6 +1,8 @@
 package com.ssm.rest.demo.security;
 
-public class TokenException extends RuntimeException{
+import org.apache.shiro.authc.AuthenticationException;
+
+public class TokenException extends AuthenticationException {
 
 	/**
 	 * 
