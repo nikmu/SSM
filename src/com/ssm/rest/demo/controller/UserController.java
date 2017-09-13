@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssm.rest.demo.common.Response;
 import com.ssm.rest.demo.entity.User;
-import com.ssm.rest.demo.model.UserModel;
 import com.ssm.rest.demo.security.IgnoreSecurity;
 import com.ssm.rest.demo.service.IOrganizationService;
 import com.ssm.rest.demo.service.IRoleService;
@@ -37,7 +36,12 @@ public class UserController {
 	
 	@RequiresPermissions("user:view")
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	@IgnoreSecurity
 	public Response searchAllUser() {
+//		Subject subject = SecurityUtils.getSubject();
+//		if(subject.isAuthenticated()) {
+//			subject.checkPermission("user:view");
+//		}
 		return new Response().success(userService.findAll());
 	}
 	

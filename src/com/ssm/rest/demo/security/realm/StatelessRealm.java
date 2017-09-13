@@ -28,6 +28,7 @@ public class StatelessRealm extends AuthorizingRealm {
         //仅支持StatelessToken类型的Token
         return token instanceof TokenModel;
     }
+    
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         //根据用户名查找角色，请根据需求实现

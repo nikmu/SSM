@@ -104,6 +104,15 @@
 			</list>
 		</property>
 	</bean>
+	<bean id="authorizer"
+		class="org.apache.shiro.authz.ModularRealmAuthorizer">
+		<property name="realms">
+			<list>
+				<ref bean="StatelessRealm" />
+				<ref bean="userRealm" />
+			</list>
+		</property>
+	</bean>
 
 	<!-- 安全管理器 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
@@ -114,6 +123,7 @@
 		<property name="cacheManager" ref="cacheManager" />
 		<!-- <property name="rememberMeManager" ref="rememberMeManager" /> -->
 		<property name="authenticator" ref="authenticator" />
+		<property name="authorizer" ref="authorizer" />
 	</bean>
 
 	<!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
@@ -142,7 +152,7 @@
 		<property name="filters">
 			<util:map>
 				<entry key="authc" value-ref="formAuthenticationFilter" />
-				<!-- <entry key="statelessAuthc" value-ref="statelessAuthcFilter" /> -->
+				<entry key="statelessAuthc" value-ref="statelessAuthcFilter" />
 				<!-- <entry key="sysUser" value-ref="sysUserFilter"/> -->
 			</util:map>
 		</property>
@@ -151,7 +161,7 @@
 				/login = anon
 				<!-- /logout = logout /authenticated = authc -->
 				/logout = logout
-				/** = anon
+				/** = statelessAuthc
 			</value>
 		</property>
 	</bean>
