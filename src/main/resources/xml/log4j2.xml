@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd">
+<configuration status="error">
+	<!--先定义所有的appender-->
+	<appenders>
+		<!--这个输出控制台的配置-->
+		<Console name="Console" target="SYSTEM_OUT">
+			<!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+			<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"></ThresholdFilter>
+			<!--这个都知道是输出日志的格式-->
+			<PatternLayout pattern="%d{HH:mm:ss.SSS}%-5level%class{36}%L%M-%msg%xEx%n"/>
+		</Console>
+		<!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，这个也挺有用的，适合临时测试用-->
+		<File name="log" fileName="log/test.log" append="false">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS}%-5level%class{36}%L%M-%msg%xEx%n"/>
+		</File>
+	</appenders>
+	<!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
+	<loggers>
+		<logger name="org.springframework.core" level="info"/>
+		<logger name="org.springframework.beans" level="info"/>
+		<logger name="org.springframework.context" level="info"/>
+		<logger name="org.springframework.web" level="info"/>
+		<root level="info">
+			<!-- <appender-refref="RollingFile"/> -->
+			<appender-ref ref="Console"/>
+		</root>
+	</loggers>
+</configuration>
